@@ -1,11 +1,16 @@
 var webpack = require('webpack');
 var vue = require("vue-loader");
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
+var path = require('path');
 
 module.exports = {
-  entry: './src/app.js',
+  entry: [
+    'webpack-dev-server/client?http://localhost:3000',
+    'webpack/hot/only-dev-server',
+    './src/app.js'
+  ],
   output: {
-    path: './dist',
+    path: path.join(__dirname, 'dist'),
     publicPath: '/dist/',
     filename: 'app.js'
   },
@@ -18,6 +23,9 @@ module.exports = {
       loader: 'babel',
       exclude: /node_modules/
     }, {
+      test: /\.scss$/,
+      loader: ExtractTextPlugin.extract('style-loader', 'css-loader!sass-loader')
+    }, {
       test: /\.(png|jpg|gif)$/,
       loader: 'file?name=[name].[ext]?[hash]'
     }]
@@ -28,6 +36,7 @@ module.exports = {
     }
   },
   plugins: [
+    new webpack.HotModuleReplacementPlugin(),
     new ExtractTextPlugin('app.css')
   ],
   babel: {

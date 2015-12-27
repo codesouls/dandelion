@@ -1,18 +1,24 @@
+require('./assets/stylesheets/bootstrap.scss');
+
 import Vue from 'vue';
+import VueRouter from 'vue-router';
+import VueResource from 'vue-resource';
+
 import App from './app.vue';
 import Home from './views/home.vue';
 import Map from './views/map.vue';
 import Application from './views/application.vue';
-import VueRouter from 'vue-router';
-import VueResource from 'vue-resource';
 
 Vue.use(VueRouter);
 Vue.use(VueResource);
 
+Vue.config.debug = true;
+
 let router = new VueRouter({
-  hashbang: false,
-  history: true,
-  saveScrollPosition: true
+  hashbang: true,
+  history: false,
+  saveScrollPosition: true,
+  transitionOnLoad: true
 });
 
 router.map({
