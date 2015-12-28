@@ -16,7 +16,7 @@ Vue.config.debug = true;
 
 let router = new VueRouter({
   hashbang: true,
-  history: false,
+  history: true,
   saveScrollPosition: true,
   transitionOnLoad: true
 });
