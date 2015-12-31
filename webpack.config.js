@@ -4,15 +4,21 @@ var ExtractTextPlugin = require("extract-text-webpack-plugin");
 var path = require('path');
 
 module.exports = {
-  entry: [
-    'webpack-dev-server/client?http://localhost:3000',
-    'webpack/hot/only-dev-server',
-    './src/app.js'
-  ],
+  entry: {
+    app: [
+      'webpack-dev-server/client?http://localhost:3000',
+      'webpack/hot/only-dev-server',
+      './src/app.js'
+    ],
+    // vendor: [
+    //   './src/assets/javascripts/jquery-1.11.3.min.js',
+    //   './src/assets/javascripts/bootstrap.min.js'
+    // ],
+  },
   output: {
     path: path.join(__dirname, 'dist'),
     publicPath: '/dist/',
-    filename: 'app.js'
+    filename: '[name].js'
   },
   module: {
     loaders: [{

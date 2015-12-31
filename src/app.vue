@@ -6,7 +6,7 @@
           ☰
         </button>
         <div class="collapse navbar-toggleable-xs" id="dlNavbar">
-          <a class="navbar-brand" href="/">Dandelion</a>
+          <a class="navbar-brand" href="/">{{portalName}}</a>
           <ul class="nav navbar-nav">
             <li class="nav-item">
               <a class="nav-link" v-link="'/'">首页</a>
@@ -17,9 +17,21 @@
             <li class="nav-item">
               <a class="nav-link" v-link="'/application'">应用</a>
             </li>
+            <!-- <li class="nav-item">
+              <a class="nav-link" v-link="'/group'">群组</a>
+            </li> -->
+            <li class="nav-item" v-if="token">
+              <a class="nav-link" v-link="'/content'">我的内容</a>
+            </li>
           </ul>
           <ul class="nav navbar-nav pull-xs-right">
-            <li class="nav-item">
+            <li class="nav-item" v-if="token">
+              <a class="nav-link" v-link="'/manage'">管理</a>
+            </li>
+            <li class="nav-item" v-if="token">
+              <a class="nav-link" href="#" v-on:click="signout">退出</a>
+            </li>
+            <li class="nav-item" v-else>
               <a class="nav-link" href="#" v-on:click="login">登录</a>
             </li>
           </ul>
@@ -28,14 +40,7 @@
     </nav>
   </div>
 
-  <div class="main">
-    <div class="container">
-      <!-- <iframe src="https://fatteru.cloud.com/arcgis/sharing/rest/oauth2/authorize?client_id=arcgisonline&redirect_uri=https://fatteru.cloud.com/arcgis/home/postsignin.html&display=iframe&response_type=token&parent=https://fatteru.cloud.com&expiration=20160&locale=zh-cn" width="100%" height="100%">
-
-      </iframe> -->
-      <router-view></router-view>
-    </div>
-  </div>
+  <router-view></router-view>
 
   <div class="footer">
     <div class="container">
@@ -48,45 +53,52 @@
 </template>
 
 <style lang="sass" scoped>
-.footer {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    height: 60px;
-    line-height: 60px;
-    background-color: #f5f5f5;
-}
 </style>
 
 <script>
-import {storage} from './utils';
-
-function queryString(uri, val) {
-  var re = new RegExp("" +val+ "=([^&?]*)", "ig");
-  return ((uri.match(re))?(uri.match(re)[0].substr(val.length+1)):null);
-};
+import {storage, queryString} from './utils';
+import * as portal from './api';
 
 export default {
+  data() {
+    return {
+      token: storage.getItem('token'),
+      portalName: 'Portal for ArcGIS'
+    }
+  },
   created() {
     var hash = window.location.hash;
-    var timeNow = new Date();
+    var self = this;
 
-    storage.setItem('token', queryString(hash, 'access_token')).expires(parseInt(queryString(hash, 'expires_in')));
-    storage.setItem('username', queryString(hash, 'username'));
+    if(queryString(hash, 'access_token') && !storage.getItem('token')) {
+      storage.setItem('token', queryString(hash, 'access_token')).expires(parseInt(queryString(hash, 'expires_in')));
+      storage.setItem('username', queryString(hash, 'username'));
 
-    // localStorage['portal.token'] = queryString(hash, 'access_token');
-    // localStorage['portal.expires_in'] = timeNow.getTime() + parseInt(queryString(hash, 'expires_in')) * 1000;
-    // localStorage['portal.username'] = queryString(hash, 'username');
+      self.$set('token', queryString(hash, 'access_token'));
+    }
+
+    portal.getPortalInfo().then(function(res) {
+      storage.setItem('orgid', res.id);
+      self.$set('portalName', res.name);
+    }, function(err) {
+      console.log(err);
+    })
   },
   methods: {
     login() {
       var path = 'https://fatteru.cloud.com/arcgis/sharing/rest/oauth2/authorize?';
       var queryParams = ['client_id=' + 'KlHwQPA5TWl1omVg',
       'response_type=token',
+      'expiration=10080',
+      'locale=zh-cn',
       'redirect_uri=' + window.location];
       var query = queryParams.join('&');
       var url = path + query;
       window.location.replace(url);
+    },
+    signout() {
+      storage.removeItem('token');
+      this.$set('token', '');
     }
   }
 }

@@ -130,6 +130,11 @@ var storage = (function(win) {
 
 })(window);
 
+function queryString(url, val) {
+  var re = new RegExp("" +val+ "=([^&?]*)", "ig");
+  return ((url.match(re))?(url.match(re)[0].substr(val.length+1)):null);
+};
+
 export {
-  storage
+  storage, queryString
 };

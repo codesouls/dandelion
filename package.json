@@ -18,7 +18,10 @@
   },
   "homepage": "https://github.com/codesouls/dandelion#readme",
   "dependencies": {
-    "vue": "^1.0.10"
+    "superagent": "^1.6.1",
+    "vue": "^1.0.10",
+    "vue-resource": "^0.5.1",
+    "vue-router": "^0.7.7"
   },
   "devDependencies": {
     "babel-core": "^6.1.2",
@@ -39,8 +42,6 @@
     "vue-hot-reload-api": "^1.2.2",
     "vue-html-loader": "^1.0.0",
     "vue-loader": "^7.1.7",
-    "vue-resource": "^0.5.1",
-    "vue-router": "^0.7.7",
     "webpack": "^1.12.9",
     "webpack-dev-server": "^1.14.0"
   }

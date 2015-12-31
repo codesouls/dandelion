@@ -4,28 +4,16 @@
     <div class="row">
       <div class="col-md-3">
         <div class="list-group">
-          <ul>
-            <li class="" href="#" v-on:click="getMapContent('webmap')">地图</li>
-            <li class="" href="#" v-on:click="getMapContent('weblayer')">图层</li>
-            <ul>
-              <li class="" href="#" v-on:click="getMapContent('features')">要素图层</li>
-              <li class="" href="#" v-on:click="getMapContent('tiles')">切片图层</li>
-              <li class="" href="#" v-on:click="getMapContent('mapimage')">地图图像图层</li>
-              <li class="" href="#" v-on:click="getMapContent('imagery')">影像</li>
-            </ul>
-            <li class="" href="#" v-on:click="getMapContent('scene')">场景</li>
-            <li class="" href="#" v-on:click="getMapContent('tool')">工具</li>
-            <ul>
-              <li class="" href="#" v-on:click="getMapContent('geometric')">几何运算</li>
-              <li class="" href="#" v-on:click="getMapContent('geoprocessing')">地理处理任务</li>
-              <li class="" href="#" v-on:click="getMapContent('network')">网络分析</li>
-            </ul>
-          </ul>
+          <a class="nav-link list-group-item" href="#" v-on:click="getMapContent('all')">所有</a>
+          <a class="nav-link list-group-item" href="#" v-on:click="getMapContent('webmap')">地图</a>
+          <a class="nav-link list-group-item" href="#" v-on:click="getMapContent('weblayer')">图层</a>
+          <a class="nav-link list-group-item" href="#" v-on:click="getMapContent('scene')">场景</a>
+          <a class="nav-link list-group-item" href="#" v-on:click="getMapContent('tool')">工具</a>
         </div>
       </div>
       <div class="col-md-9">
         <div class="row resource-list">
-          <div class="col-md-4 map" v-for="item in mapList.results">
+          <div class="col-md-4 map" v-for="item in contentList.items">
             <a href="/item/{{item.id}}" title="{{item.title}}">
               <div class="card">
                 <img class="card-img-top" v-bind:src="item.thumbnail | thumbnail item.id" alt="{{item.title}}">
@@ -40,8 +28,8 @@
         </div>
         <nav v-bind:style="{ display: isPaginationDisplay}">
           <ul class="pager">
-            <li v-bind:class="{'pager-prev': true, 'disabled': isPrevDisabled}"><span v-on:click="getMapContent(itemType, mapList.start - 12, isPrevDisabled)">Previous</span></li>
-            <li v-bind:class="{'pager-next': true, 'disabled': isNextDisabled}"><span v-on:click="getMapContent(itemType, mapList.nextStart, isNextDisabled)" >Next</span></li>
+            <li v-bind:class="{'pager-prev': true, 'disabled': isPrevDisabled}"><span v-on:click="getMapContent(itemType, contentList.start - 12, isPrevDisabled)">Previous</span></li>
+            <li v-bind:class="{'pager-next': true, 'disabled': isNextDisabled}"><span v-on:click="getMapContent(itemType, contentList.nextStart, isNextDisabled)" >Next</span></li>
           </ul>
         </nav>
       </div>
@@ -50,17 +38,15 @@
 </div>
 </template>
 
-<style lang="sass" scoped>
-</style>
-
 <script>
 import * as portal from '../api';
+import {storage} from '../utils';
 
 export default {
   data() {
     return {
-      itemType: 'webmap',
-      mapList: {},
+      itemType: 'all',
+      contentList: {},
       isPaginationDisplay: 'none',
       isPrevDisabled: false,
       isNextDisabled: false
@@ -72,14 +58,14 @@ export default {
     }
   },
   methods:{
-    getMapContent(itemType = 'webmap', start = 1, isDisabled = false) {
+    getMapContent(itemType = 'all', start = 1, isDisabled = false) {
       if(isDisabled) {return;}
 
       var self = this;
       self.$set('itemType', itemType);
 
-      portal.queryItem({type: itemType, num: 12, start: start, sortField: 'created'}).then(function(res) {
-        self.$set('mapList', res);
+      portal.queryItemByUser({token: storage.getItem('token'), num: 12, start: start, sortField: 'created'}).then(function(res) {
+        self.$set('contentList', res);
 
         if(res.total > 12) {
           self.$set('isPaginationDisplay', 'block');
@@ -107,7 +93,7 @@ export default {
     thumbnail(value, itemId) {
       if (value)
       {
-        return '/rest/content/items/' + itemId + '/info/' + value;
+        return '/rest/content/items/' + itemId + '/info/' + value + '?token=' + storage.getItem('token');
       } else {
         return 'http://fatteru.cloud.com/arcgis/portalimages/desktopapp.png';
       }
