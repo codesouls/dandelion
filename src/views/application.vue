@@ -4,10 +4,22 @@
     <div class="row">
       <div class="col-md-3">
         <div class="list-group">
-          <a class="nav-link list-group-item" href="#" v-on:click="getMapContent('appall')">所有</a>
-          <a class="nav-link list-group-item" href="#" v-on:click="getMapContent('webmap')">web</a>
-          <a class="nav-link list-group-item" href="#" v-on:click="getMapContent('weblayer')">移动</a>
-          <a class="nav-link list-group-item" href="#" v-on:click="getMapContent('scene')">桌面</a>
+          <ul>
+            <li>
+              <a class="" href="#" v-on:click="getAppContent('applications')">所有</a>
+              <ul>
+                <li>
+                  <a class="" href="#" v-on:click="getAppContent('applications-web')">web</a>
+                </li>
+                <li>
+                  <a class="" href="#" v-on:click="getAppContent('applications-mobile')">移动</a>
+                </li>
+                <li>
+                  <a class="" href="#" v-on:click="getAppContent('applications-desktop')">桌面</a>
+                </li>
+              </ul>
+            </li>
+          </ul>
         </div>
       </div>
       <div class="col-md-9">
@@ -27,8 +39,8 @@
         </div>
         <nav v-bind:style="{ display: isPaginationDisplay}">
           <ul class="pager">
-            <li v-bind:class="{'pager-prev': true, 'disabled': isPrevDisabled}"><span v-on:click="getAppContent(appList.start - 12, isPrevDisabled)">Previous</span></li>
-            <li v-bind:class="{'pager-next': true, 'disabled': isNextDisabled}"><span v-on:click="getAppContent(appList.nextStart, isNextDisabled)" >Next</span></li>
+            <li v-bind:class="{'pager-prev': true, 'disabled': isPrevDisabled}"><span v-on:click="getAppContent(itemType, appList.start - 12, isPrevDisabled)">Previous</span></li>
+            <li v-bind:class="{'pager-next': true, 'disabled': isNextDisabled}"><span v-on:click="getAppContent(itemType, appList.nextStart, isNextDisabled)" >Next</span></li>
           </ul>
         </nav>
       </div>
@@ -43,6 +55,7 @@ import * as portal from '../api';
 export default {
   data() {
     return {
+      itemType: 'applications',
       appList: {},
       isPaginationDisplay: 'none',
       isPrevDisabled: false,
@@ -55,12 +68,13 @@ export default {
     }
   },
   methods:{
-    getAppContent(start = 1, isDisabled = false) {
+    getAppContent(itemType = 'applications', start = 1, isDisabled = false) {
       if(isDisabled) {return;}
 
       var self = this;
+      self.$set('itemType', itemType);
 
-      portal.queryItem({type: 'application', num: 12, start: start, sortField: 'created'}).then(function(res) {
+      portal.queryItem({type: itemType, num: 12, start: start, sortField: 'created'}).then(function(res) {
         self.$set('appList', res);
 
         if(res.total > 12) {

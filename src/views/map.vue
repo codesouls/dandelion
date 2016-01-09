@@ -5,21 +5,54 @@
       <div class="col-md-3">
         <div class="list-group">
           <ul>
-            <li class="" href="#" v-on:click="getMapContent('webmap')">地图</li>
-            <li class="" href="#" v-on:click="getMapContent('weblayer')">图层</li>
-            <ul>
-              <li class="" href="#" v-on:click="getMapContent('features')">要素图层</li>
-              <li class="" href="#" v-on:click="getMapContent('tiles')">切片图层</li>
-              <li class="" href="#" v-on:click="getMapContent('mapimage')">地图图像图层</li>
-              <li class="" href="#" v-on:click="getMapContent('imagery')">影像</li>
-            </ul>
-            <li class="" href="#" v-on:click="getMapContent('scene')">场景</li>
-            <li class="" href="#" v-on:click="getMapContent('tool')">工具</li>
-            <ul>
-              <li class="" href="#" v-on:click="getMapContent('geometric')">几何运算</li>
-              <li class="" href="#" v-on:click="getMapContent('geoprocessing')">地理处理任务</li>
-              <li class="" href="#" v-on:click="getMapContent('network')">网络分析</li>
-            </ul>
+            <li>
+              <a href="#" v-on:click="getMapContent('maps')">地图</a>
+              <ul>
+                <li>
+                  <a href="#" v-on:click="getMapContent('maps-webmaps')">Web地图</a>
+                </li>
+                <li>
+                  <a href="#" v-on:click="getMapContent('maps-mapfiles')">地图文件</a>
+                </li>
+              </ul>
+            </li>
+            <li>
+              <a href="#" v-on:click="getMapContent('layers')">图层</a>
+              <ul>
+                <li>
+                  <a href="#" v-on:click="getMapContent('layers-weblayers-features')">要素图层</a>
+                </li>
+                <li>
+                  <a href="#" v-on:click="getMapContent('layers-weblayers-tiles')">切片图层</a>
+                </li>
+                <li>
+                  <a href="#" v-on:click="getMapContent('layers-weblayers-mapimage')">地图图像图层</a>
+                </li>
+                <li>
+                  <a href="#" v-on:click="getMapContent('layers-weblayers-imagery')">影像</a>
+                </li>
+                <li>
+                  <a href="#" v-on:click="getMapContent('layers-weblayers-tables')">表</a>
+                </li>
+              </ul>
+            </li>
+            <li>
+              <a href="#" v-on:click="getMapContent('scenes')">场景</a>
+            </li>
+            <li>
+              <a href="#" v-on:click="getMapContent('tools')">工具</a>
+              <ul>
+                <li>
+                  <a href="#" v-on:click="getMapContent('tools-geometric')">几何运算</a>
+                </li>
+                <li>
+                  <a href="#" v-on:click="getMapContent('tools-geoprocessing')">地理处理任务</a>
+                </li>
+                <li>
+                  <a href="#" v-on:click="getMapContent('tools-network')">网络分析</a>
+                </li>
+              </ul>
+            </li>
           </ul>
         </div>
       </div>
@@ -51,6 +84,9 @@
 </template>
 
 <style lang="sass" scoped>
+.list-group ul li {
+  cursor: pointer;
+}
 </style>
 
 <script>
@@ -59,7 +95,7 @@ import * as portal from '../api';
 export default {
   data() {
     return {
-      itemType: 'webmap',
+      itemType: 'maps',
       mapList: {},
       isPaginationDisplay: 'none',
       isPrevDisabled: false,
@@ -72,7 +108,7 @@ export default {
     }
   },
   methods:{
-    getMapContent(itemType = 'webmap', start = 1, isDisabled = false) {
+    getMapContent(itemType = 'maps', start = 1, isDisabled = false) {
       if(isDisabled) {return;}
 
       var self = this;
@@ -105,8 +141,7 @@ export default {
   },
   filters: {
     thumbnail(value, itemId) {
-      if (value)
-      {
+      if (value) {
         return '/rest/content/items/' + itemId + '/info/' + value;
       } else {
         return 'http://fatteru.cloud.com/arcgis/portalimages/desktopapp.png';
