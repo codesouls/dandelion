@@ -1,6 +1,6 @@
 export default {
   portal: {
-    host: 'fatteru.cloud.com',
-    url: 'https://fatteru.cloud.com/arcgis'
+    host: 'apollo.gisportal.com',
+    url: 'https://apollo.gisportal.com/arcgis'
   }
 }

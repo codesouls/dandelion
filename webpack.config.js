@@ -6,19 +6,13 @@ var path = require('path');
 module.exports = {
   entry: {
     app: [
-      'webpack-dev-server/client?http://localhost:3000',
-      'webpack/hot/only-dev-server',
-      './src/app.js'
-    ],
-    // vendor: [
-    //   './src/assets/javascripts/jquery-1.11.3.min.js',
-    //   './src/assets/javascripts/bootstrap.min.js'
-    // ],
+      './src/main.js'
+    ]
   },
   output: {
     path: path.join(__dirname, 'dist'),
     publicPath: '/dist/',
-    filename: '[name].js'
+    filename: 'app.js'
   },
   module: {
     loaders: [{
@@ -32,7 +26,7 @@ module.exports = {
       test: /\.scss$/,
       loader: ExtractTextPlugin.extract('style-loader', 'css-loader!sass-loader')
     }, {
-      test: /\.(png|jpg|gif)$/,
+      test: /\.(png|jpg|gif|svg)$/,
       loader: 'file?name=[name].[ext]?[hash]'
     }]
   },
@@ -42,7 +36,6 @@ module.exports = {
     }
   },
   plugins: [
-    new webpack.HotModuleReplacementPlugin(),
     new ExtractTextPlugin('app.css')
   ],
   babel: {
@@ -55,7 +48,7 @@ if (process.env.NODE_ENV === 'production') {
   module.exports.plugins = [
     new webpack.DefinePlugin({
       'process.env': {
-        NODE_ENV: '"production"'
+        NODE_ENV: 'production'
       }
     }),
     new webpack.optimize.UglifyJsPlugin({

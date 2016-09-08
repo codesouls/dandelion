@@ -1,52 +1,54 @@
 <template>
-  <div class="header">
-    <nav class="navbar navbar-light navbar-static-top bg-faded">
-      <div class="container">
-        <button class="navbar-toggler hidden-sm-up" type="button" data-toggle="collapse" data-target="#dlNavbar">
-          ☰
-        </button>
-        <div class="collapse navbar-toggleable-xs" id="dlNavbar">
-          <a class="navbar-brand" href="/">{{portalName}}</a>
-          <ul class="nav navbar-nav">
-            <li class="nav-item">
-              <a class="nav-link" v-link="'/'">首页</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" v-link="'/map'">地图</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" v-link="'/application'">应用</a>
-            </li>
-            <!-- <li class="nav-item">
-              <a class="nav-link" v-link="'/group'">群组</a>
-            </li> -->
-            <li class="nav-item" v-if="token">
-              <a class="nav-link" v-link="'/content'">我的内容</a>
-            </li>
-          </ul>
-          <ul class="nav navbar-nav pull-xs-right">
-            <li class="nav-item" v-if="token">
-              <a class="nav-link" v-link="'/manage'">管理</a>
-            </li>
-            <li class="nav-item" v-if="token">
-              <a class="nav-link" href="#" v-on:click="signout">退出</a>
-            </li>
-            <li class="nav-item" v-else>
-              <a class="nav-link" href="#" v-on:click="login">登录</a>
-            </li>
-          </ul>
+  <div>
+    <div class="header">
+      <nav class="navbar navbar-light navbar-static-top bg-faded">
+        <div class="container">
+          <button class="navbar-toggler hidden-sm-up" type="button" data-toggle="collapse" data-target="#dlNavbar">
+            ☰
+          </button>
+          <div class="collapse navbar-toggleable-xs" id="dlNavbar">
+            <a class="navbar-brand" href="/">{{portalName}}</a>
+            <ul class="nav navbar-nav">
+              <li class="nav-item">
+                <router-link class="nav-link" to="/">首页</router-link>
+              </li>
+              <li class="nav-item">
+                <router-link class="nav-link" to="/map">地图</router-link>
+              </li>
+              <li class="nav-item">
+                <router-link class="nav-link" to="/application">应用</router-link>
+              </li>
+              <!-- <li class="nav-item">
+                   <a class="nav-link" v-link="'/group'">群组</a>
+                   </li> -->
+              <li class="nav-item" v-if="token">
+                <router-link class="nav-link" to="/content">我的内容</router-link>
+              </li>
+            </ul>
+            <ul class="nav navbar-nav pull-xs-right">
+              <li class="nav-item" v-if="token">
+                <router-link class="nav-link" to="/manage">管理</router-link>
+              </li>
+              <li class="nav-item" v-if="token">
+                <router-link class="nav-link" to="/signout">退出</router-link>
+              </li>
+              <li class="nav-item" v-else>
+                <router-link class="nav-link" to="/signin">登录</router-link>
+              </li>
+            </ul>
+          </div>
         </div>
-      </div>
-    </nav>
-  </div>
+      </nav>
+    </div>
 
-  <router-view></router-view>
+    <router-view></router-view>
 
-  <div class="footer">
-    <div class="container">
-      <div style="float: left">Copyright © 2015 Codesouls</div>
-      <div style="float: right">
-        <a href="https://github.com/codesouls/dandelion">源代码</a>
+    <div class="footer">
+      <div class="container">
+        <div style="float: left">Copyright © 2015 da07ng</div>
+        <div style="float: right">
+          <a href="https://github.com/da07ng/dandelion">源代码</a>
+        </div>
       </div>
     </div>
   </div>
@@ -79,13 +81,13 @@ export default {
 
     portal.getPortalInfo().then(function(res) {
       storage.setItem('orgid', res.id);
-      self.$set('portalName', res.name);
+      // self.$set('portalName', res.name);
     }, function(err) {
       console.log(err);
     })
   },
   methods: {
-    login() {
+    signin() {
       var path = 'https://fatteru.cloud.com/arcgis/sharing/rest/oauth2/authorize?';
       var queryParams = ['client_id=' + 'KlHwQPA5TWl1omVg',
       'response_type=token',

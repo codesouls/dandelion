@@ -420,7 +420,7 @@ var portalContentConfig = {
 export function getPortalInfo() {
   var promise = new Promise(function(resolve, reject) {
     request
-      .get('/rest/portals/self')
+      .get('/sharing/rest/portals/self')
       .query({
         f: 'json'
       })
@@ -442,7 +442,7 @@ export function getPortalInfo() {
 export function getPortalUser() {
   var promise = new Promise(function(resolve, reject) {
     request
-      .get('/rest/portals/self/users')
+      .get('/sharing/rest/portals/self/users')
       .query({
         token: queryParams.token
       })
@@ -499,7 +499,7 @@ export function queryGroups(queryParams) {
 export function queryItem(queryParams) {
   var promise = new Promise(function(resolve, reject) {
     request
-      .get('rest/search')
+      .get('/sharing/rest/search')
       .query({
         q: 'accountid:' + storage.getItem('orgid') + portalContentConfig.viewQueries.web + portalContentConfig.viewQueries.none + portalContentConfig.filterQueries[queryParams.type].f
       })
@@ -535,7 +535,7 @@ export function queryItem(queryParams) {
 export function queryItemByUser(queryParams) {
   var promise = new Promise(function(resolve, reject) {
     request
-      .get('/rest/content/users/arcgis')
+      .get('/sharing/rest/content/users/arcgis')
       .query({
         token: queryParams.token
       })

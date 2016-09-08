@@ -1,28 +1,34 @@
-var WebpackDevServer = require('webpack-dev-server');
 var webpack = require('webpack');
+var WebpackDevServer = require('webpack-dev-server');
 var config = require('./webpack.config');
 
+config.entry.app.unshift('webpack-dev-server/client?http://localhost:9090', 'webpack/hot/dev-server');
+
+config.plugins.push(new webpack.HotModuleReplacementPlugin());
+
 var proxy = {
-  "/rest/*": {
-    target: "https://fatteru.cloud.com/arcgis/sharing",
-    host: "fatteru.cloud.com",
+  '/sharing/*': {
+    target: 'https://apollo.gisportal.com/arcgis',
+    ignorePath: true,
+    changeOrigin: true,
     secure: false
   }
 };
 
-var app = new WebpackDevServer(webpack(config), {
+var server = new WebpackDevServer(webpack(config), {
   publicPath: config.output.publicPath,
+  hot: true,
   historyApiFallback: true,
   proxy: proxy,
-  hot: true,
   stats: {
     colors: true
   }
 });
 
-app.listen(3000, '0.0.0.0', function(err, result) {
-  console.log('http://localhost:3000');
-  if (err) {
-    console.log(err);
+server.listen(9090, '0.0.0.0', function (error) {
+  if (error) {
+    console.log(error);
   }
+
+  console.log('Listening at localhost:3000');
 });

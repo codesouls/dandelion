@@ -25,9 +25,9 @@
       <div class="col-md-9">
         <div class="row resource-list">
           <div class="col-md-4 application" v-for="item in appList.results">
-            <a href="/item/{{item.id}}" title="{{item.title}}">
+            <a :href="item.id" :title="item.title">
               <div class="card">
-                <img class="card-img-top" v-bind:src="item.thumbnail | thumbnail item.id" alt="{{item.title}}">
+                <img class="card-img-top" :src="item.thumbnail" :alt="item.title">
                 <div class="card-block">
                   <h3 class="card-title">{{item.title}}</h3>
                   <p>作者：{{item.owner}}</p>
